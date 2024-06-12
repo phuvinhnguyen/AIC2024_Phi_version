@@ -1,6 +1,6 @@
 import torch
 from transformers import PreTrainedModel, PerceiverModel
-from phiver.model.double_perceiver_config import DoublePerceiverConfig
+from .double_perceiver_config import DoublePerceiverConfig
 from typing import Dict
 
 

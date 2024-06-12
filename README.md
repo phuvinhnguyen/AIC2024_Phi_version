@@ -6,6 +6,7 @@
 - Training, inference and extract feature code is not very clean (and the others)
 - This model stays in top 5 at the end of AIC 2024 (Track 2: Traffic Safety Description and Analysis)
 ![alt text](./utils/image.png)
+- The project is now unmaintained
 ## Source
 
 - model checkpoint: https://www.kaggle.com/datasets/npvinh20/aic24-phiver-checkpoint

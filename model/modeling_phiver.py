@@ -1,9 +1,9 @@
-from phiver.model.modeling_phi import PhiForCausalLM, PhiModel, PhiPreTrainedModel, logger, DynamicCache, Cache, _prepare_4d_causal_attention_mask
+from .modeling_phi import PhiForCausalLM, PhiModel, PhiPreTrainedModel, logger, DynamicCache, Cache, _prepare_4d_causal_attention_mask
 from transformers import PerceiverConfig, PreTrainedModel
-from phiver.model.configuration_phi import PhiConfig
-from phiver.model.phiver_configuration import PhiverConfig
+from .configuration_phi import PhiConfig
+from .phiver_configuration import PhiverConfig
 from transformers.modeling_outputs import CausalLMOutputWithPast, BaseModelOutputWithPast
-from phiver.model.double_perceiver import DoublePerceiver
+from .double_perceiver import DoublePerceiver
 from typing import Union, Tuple, Optional, List, Dict
 from torch.nn import CrossEntropyLoss
 from torch import nn
