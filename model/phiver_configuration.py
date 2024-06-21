@@ -1,5 +1,5 @@
 from transformers import PretrainedConfig, PerceiverConfig
-from phiver.model.double_perceiver_config import DoublePerceiverConfig
+from .double_perceiver_config import DoublePerceiverConfig
 
 
 class PhiverConfig(PretrainedConfig):
