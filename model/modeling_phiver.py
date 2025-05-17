@@ -207,7 +207,7 @@ class VideoPhiForCausalLM(PhiPreTrainedModel):
             matching_result = event_embeds @ inputs_embeds.transpose(1,2)
             matching_grd = torch.eye(self.double_perceiver.num_latents).argmax(dim=-1).unsqueeze(0).repeat(inputs_embeds.shape[0],1).to(matching_result.device)
 
-            matching_loss = 0.0 # criteria(matching_result, matching_grd)
+            matching_loss = criteria(matching_result, matching_grd)
 
         causal_lm_output = self.llm(
             input_ids=input_ids,
