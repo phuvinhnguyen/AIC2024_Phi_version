@@ -76,8 +76,8 @@ class AICDataset(Dataset):
                     caption_pedestrian = self.tokenizer(f"[pedestrian] [{self.labels[labels]}]: ")
                     caption_vehicle = self.tokenizer(f"[vehicle] [{self.labels[labels]}]: ")
                 else:
-                    caption_pedestrian = self.tokenizer(f"[pedestrian] [{self.labels[labels]}]: {event['caption_pedestrian']}")
-                    caption_vehicle = self.tokenizer(f"[vehicle] [{self.labels[labels]}]: {event['caption_vehicle']}")
+                    caption_pedestrian = self.tokenizer(f"[pedestrian] [{self.labels[labels]}]: time [{start_time}-{end_time}]: event: {event['caption_pedestrian']}<|eos|>")
+                    caption_vehicle = self.tokenizer(f"[vehicle] [{self.labels[labels]}]: time [{start_time}-{end_time}]: event: {event['caption_vehicle']}<|eos|>")
                 
                 # Get events
                 event_embeds = videos[start_time:end_time+1,...]
@@ -121,6 +121,7 @@ class AICDataset(Dataset):
                     output_pedestrian['phase'] = output_pedestrian['phase'].unsqueeze(0).to(self.device)
                     output_pedestrian['input_ids'] = output_pedestrian['input_ids'].unsqueeze(0).to(self.device)
                     output_pedestrian['attention_mask'] = output_pedestrian['attention_mask'].unsqueeze(0).to(self.device)
+                    output_pedestrian['time'] = torch.tensor([start_time, end_time]).unsqueeze(0).to(self.device)
 
                     output_pedestrian.pop('event_embeds')
                     output_pedestrian.pop('events_embeds_mask')
@@ -133,7 +134,8 @@ class AICDataset(Dataset):
                     output_vehicle['phase'] = output_vehicle['phase'].unsqueeze(0).to(self.device)
                     output_vehicle['input_ids'] = output_vehicle['input_ids'].unsqueeze(0).to(self.device)
                     output_vehicle['attention_mask'] = output_vehicle['attention_mask'].unsqueeze(0).to(self.device)
-
+                    output_vehicle['time'] = torch.tensor([start_time, end_time]).unsqueeze(0).to(self.device)
+                    
                     output_vehicle.pop('event_embeds')
                     output_vehicle.pop('events_embeds_mask')
                     output_vehicle.pop('labels')
