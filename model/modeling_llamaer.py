@@ -54,6 +54,11 @@ class EmbedPreceedLlamaModel(LlamaModel):
         if not isinstance(past_key_values, (type(None), Cache)):
             raise ValueError("The `past_key_values` should be either a `Cache` object or `None`.")
 
+        if inputs_embeds is None:
+            inputs_embeds = self.embed_tokens(input_ids)
+        else:
+            inputs_embeds = torch.concat([inputs_embeds, self.embed_tokens(input_ids)], dim=1)
+
         if use_cache and past_key_values is None:
             past_key_values = DynamicCache()
 
@@ -65,11 +70,6 @@ class EmbedPreceedLlamaModel(LlamaModel):
 
         if position_ids is None:
             position_ids = cache_position.unsqueeze(0)
-
-        if inputs_embeds is None:
-            inputs_embeds = self.embed_tokens(input_ids)
-        else:
-            inputs_embeds = torch.concat([inputs_embeds, self.embed_tokens(input_ids)], dim=1)
 
         causal_mask = self._update_causal_mask(
             attention_mask, inputs_embeds, cache_position, past_key_values, output_attentions
