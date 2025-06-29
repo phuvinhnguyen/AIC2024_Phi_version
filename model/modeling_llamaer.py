@@ -85,7 +85,7 @@ class EmbedPreceedLlamaModel(LlamaModel):
 
         # create position embeddings to be shared across the decoder layers
         position_embeddings = self.rotary_emb(hidden_states, position_ids)
-        print(position_embeddings[0].shape, position_embeddings[1].shape, position_ids.shape)
+        print(position_embeddings[0].shape, position_embeddings[1].shape, position_ids.shape, hidden_states.shape)
 
         # decoder layers
         all_hidden_states = () if output_hidden_states else None
