@@ -1,5 +1,5 @@
 from .modeling_llama import LlamaForCausalLM, LlamaModel, LlamaPreTrainedModel, logger, DynamicCache, Cache
-from transformers import PerceiverConfig, PreTrainedModel
+from transformers import PerceiverConfig, PreTrainedModel, GenerationMixin
 from .configuration_llama import LlamaConfig
 from .llamaer_configuration import LlamaerConfig
 from transformers.modeling_outputs import CausalLMOutputWithPast, BaseModelOutputWithPast
