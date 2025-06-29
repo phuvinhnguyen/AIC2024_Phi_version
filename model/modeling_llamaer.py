@@ -69,7 +69,13 @@ class EmbedPreceedLlamaModel(LlamaModel):
             )
 
         if position_ids is None:
-            position_ids = cache_position.unsqueeze(0)
+            # position_ids = cache_position.unsqueeze(0)
+            past_key_values_length = past_key_values.get_usable_length(seq_length)
+            device = input_ids.device if input_ids is not None else inputs_embeds.device
+            position_ids = torch.arange(
+                past_key_values_length, seq_length + past_key_values_length, dtype=torch.long, device=device
+            )
+            position_ids = position_ids.unsqueeze(0)
 
         causal_mask = self._update_causal_mask(
             attention_mask, inputs_embeds, cache_position, past_key_values, output_attentions
