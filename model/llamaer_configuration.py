@@ -35,7 +35,7 @@ class LlamaerConfig(PretrainedConfig):
                 ).to_dict(),
                 frame_config = PerceiverConfig(
                     num_latents = 20, # Zip to 20 embedings
-                    d_latents = 4096, # change to size of hidden size llm
+                    d_latents = 2048, # change to size of hidden size llm
                     d_model = 1024, # Previous output
                     num_blocks = 4,
                     num_self_attends_per_block = 4,
@@ -43,7 +43,7 @@ class LlamaerConfig(PretrainedConfig):
                     num_cross_attention_heads = 2
                 ).to_dict()
             )
-            self.text_model = 'meta-llama/Llama-2-7b-hf'
+            self.text_model = 'meta-llama/Llama-3.2-1B'
         else:
             self.double_perceiver = DoublePerceiverConfig(
                 video_config = video_perceiver_config,
