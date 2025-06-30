@@ -56,8 +56,12 @@ class EmbedPreceedLlamaModel(LlamaModel):
 
         if inputs_embeds is None:
             inputs_embeds = self.embed_tokens(input_ids)
+            print('inputs_embeds is none', inputs_embeds.shape)
+            print('input_ids is not none', input_ids.shape)
         else:
             inputs_embeds = torch.concat([inputs_embeds, self.embed_tokens(input_ids)], dim=1)
+            print('inputs_embeds is not none', inputs_embeds.shape)
+            print('input_ids is not none', input_ids.shape)
 
         if use_cache and past_key_values is None:
             past_key_values = DynamicCache()
