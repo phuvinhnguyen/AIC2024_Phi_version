@@ -167,10 +167,16 @@ class VideoLlamaForCausalLM(LlamaPreTrainedModel, GenerationMixin):
             condition_inputs_embeds = None
         print('inputs embeds is none:', inputs_embeds == None)
         if past_key_values is not None:
-            print('past key values shape:', past_key_values)
+            print('past key values is not none')
+            if isinstance(past_key_values, DynamicCache):
+                print('length of past key values:', past_key_values.get_seq_length())
+            else:
+                print(past_key_values)
         else:
             print('past key values is none')
-        if past_key_values is None and inputs_embeds is not None:
+
+        has_past_key_values = past_key_values is not None or (isinstance(past_key_values, DynamicCache) and past_key_values.get_seq_length() > 0)
+        if not has_past_key_values and inputs_embeds is not None:
             inputs_embeds = self.double_perceiver(inputs_embeds, condition_inputs_embeds=condition_inputs_embeds, attention_mask=inputs_embeds_mask).last_hidden_state
         else:
             inputs_embeds = None
