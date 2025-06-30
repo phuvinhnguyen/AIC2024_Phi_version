@@ -32,12 +32,10 @@ class EmbedPreceedLlamaModel(LlamaModel):
         use_cache = use_cache if use_cache is not None else self.config.use_cache
 
         if input_ids is not None and inputs_embeds is not None:
-            inputs_embeds = torch.concat([inputs_embeds, self.embed_tokens(input_ids)], dim=1)
             batch_size, seq_length = input_ids.shape[:2]
             _, embed_length = inputs_embeds.shape[:2]
             seq_length = seq_length + embed_length
         elif input_ids is not None:
-            inputs_embeds = self.embed_tokens(input_ids)
             batch_size, seq_length = input_ids.shape[:2]
         elif inputs_embeds is not None:
             batch_size, seq_length = inputs_embeds.shape[:2]

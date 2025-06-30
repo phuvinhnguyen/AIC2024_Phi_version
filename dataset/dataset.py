@@ -76,8 +76,8 @@ class AICDataset(Dataset):
                     caption_pedestrian = self.tokenizer(f"[pedestrian] [{self.labels[labels]}]: ")
                     caption_vehicle = self.tokenizer(f"[vehicle] [{self.labels[labels]}]: ")
                 else:
-                    caption_pedestrian = self.tokenizer(f"[pedestrian] [{self.labels[labels]}]: time [{start_time}-{end_time}]: event: {event['caption_pedestrian']}<|eos|>")
-                    caption_vehicle = self.tokenizer(f"[vehicle] [{self.labels[labels]}]: time [{start_time}-{end_time}]: event: {event['caption_vehicle']}<|eos|>")
+                    caption_pedestrian = self.tokenizer(f"[pedestrian] [{self.labels[labels]}]: {event['caption_pedestrian']}<|eos|>")
+                    caption_vehicle = self.tokenizer(f"[vehicle] [{self.labels[labels]}]: {event['caption_vehicle']}<|eos|>")
                 
                 # Get events
                 event_embeds = videos[start_time:end_time+1,...]
