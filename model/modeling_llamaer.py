@@ -56,11 +56,8 @@ class EmbedPreceedLlamaModel(LlamaModel):
 
         if inputs_embeds is None:
             inputs_embeds = self.embed_tokens(input_ids)
-            print('input embed is none', inputs_embeds.shape)
-            print(input_ids.shape)
         else:
             inputs_embeds = torch.concat([inputs_embeds, self.embed_tokens(input_ids)], dim=1)
-            print('input embed is not none', inputs_embeds.shape)
 
         if use_cache and past_key_values is None:
             past_key_values = DynamicCache()
@@ -165,15 +162,6 @@ class VideoLlamaForCausalLM(LlamaPreTrainedModel, GenerationMixin):
             condition_inputs_embeds = self.embeding_condition(phase)
         else:
             condition_inputs_embeds = None
-        print('inputs embeds is none:', inputs_embeds == None)
-        if past_key_values is not None:
-            print('past key values is not none')
-            if isinstance(past_key_values, DynamicCache):
-                print('length of past key values:', past_key_values.get_seq_length())
-            else:
-                print(past_key_values)
-        else:
-            print('past key values is none')
 
         has_past_key_values = isinstance(past_key_values, torch.Tensor) or (isinstance(past_key_values, DynamicCache) and past_key_values.get_seq_length() > 0)
         if not has_past_key_values and inputs_embeds is not None:
@@ -187,7 +175,7 @@ class VideoLlamaForCausalLM(LlamaPreTrainedModel, GenerationMixin):
             matching_result = event_embeds @ inputs_embeds.transpose(1,2)
             matching_grd = torch.eye(self.double_perceiver.num_latents).argmax(dim=-1).unsqueeze(0).repeat(inputs_embeds.shape[0],1).to(matching_result.device)
             matching_loss = criteria(matching_result, matching_grd)
-        print('inputs embeds is none:', inputs_embeds == None)
+
         causal_lm_output = self.llm(
             input_ids=input_ids,
             attention_mask=attention_mask,
