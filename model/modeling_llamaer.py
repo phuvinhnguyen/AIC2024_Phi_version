@@ -32,10 +32,12 @@ class EmbedPreceedLlamaModel(LlamaModel):
         use_cache = use_cache if use_cache is not None else self.config.use_cache
 
         if input_ids is not None and inputs_embeds is not None:
+            inputs_embeds = torch.concat([inputs_embeds, self.embed_tokens(input_ids)], dim=1)
             batch_size, seq_length = input_ids.shape[:2]
             _, embed_length = inputs_embeds.shape[:2]
             seq_length = seq_length + embed_length
         elif input_ids is not None:
+            inputs_embeds = self.embed_tokens(input_ids)
             batch_size, seq_length = input_ids.shape[:2]
         elif inputs_embeds is not None:
             batch_size, seq_length = inputs_embeds.shape[:2]
@@ -56,12 +58,11 @@ class EmbedPreceedLlamaModel(LlamaModel):
 
         if inputs_embeds is None:
             inputs_embeds = self.embed_tokens(input_ids)
-            print('inputs_embeds is none', inputs_embeds.shape)
-            print('input_ids is not none', input_ids.shape)
+            print('input embed is none', inputs_embeds.shape)
+            print(input_ids.shape)
         else:
             inputs_embeds = torch.concat([inputs_embeds, self.embed_tokens(input_ids)], dim=1)
-            print('inputs_embeds is not none', inputs_embeds.shape)
-            print('input_ids is not none', input_ids.shape)
+            print('input embed is not none', inputs_embeds.shape)
 
         if use_cache and past_key_values is None:
             past_key_values = DynamicCache()
@@ -177,6 +178,7 @@ class VideoLlamaForCausalLM(LlamaPreTrainedModel, GenerationMixin):
             matching_result = event_embeds @ inputs_embeds.transpose(1,2)
             matching_grd = torch.eye(self.double_perceiver.num_latents).argmax(dim=-1).unsqueeze(0).repeat(inputs_embeds.shape[0],1).to(matching_result.device)
             matching_loss = criteria(matching_result, matching_grd)
+        print(inputs_embeds.shape)
         causal_lm_output = self.llm(
             input_ids=input_ids,
             attention_mask=attention_mask,
