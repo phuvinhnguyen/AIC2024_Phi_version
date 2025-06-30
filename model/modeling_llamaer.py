@@ -167,7 +167,7 @@ class VideoLlamaForCausalLM(LlamaPreTrainedModel, GenerationMixin):
             condition_inputs_embeds = None
         print('inputs embeds is none:', inputs_embeds == None)
         if past_key_values is not None:
-            print('past key values shape:', past_key_values[0][0].shape)
+            print('past key values shape:', past_key_values)
         else:
             print('past key values is none')
         if past_key_values is None and inputs_embeds is not None:
