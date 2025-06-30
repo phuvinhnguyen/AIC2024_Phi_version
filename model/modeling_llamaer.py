@@ -175,7 +175,7 @@ class VideoLlamaForCausalLM(LlamaPreTrainedModel, GenerationMixin):
         else:
             print('past key values is none')
 
-        has_past_key_values = past_key_values is not None or (isinstance(past_key_values, DynamicCache) and past_key_values.get_seq_length() > 0)
+        has_past_key_values = isinstance(past_key_values, torch.Tensor) or (isinstance(past_key_values, DynamicCache) and past_key_values.get_seq_length() > 0)
         if not has_past_key_values and inputs_embeds is not None:
             inputs_embeds = self.double_perceiver(inputs_embeds, condition_inputs_embeds=condition_inputs_embeds, attention_mask=inputs_embeds_mask).last_hidden_state
         else:
