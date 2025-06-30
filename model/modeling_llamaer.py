@@ -32,16 +32,21 @@ class EmbedPreceedLlamaModel(LlamaModel):
         use_cache = use_cache if use_cache is not None else self.config.use_cache
 
         if input_ids is not None and inputs_embeds is not None:
+            inputs_embeds = torch.concat([inputs_embeds, self.embed_tokens(input_ids)], dim=1)
             batch_size, seq_length = input_ids.shape[:2]
             _, embed_length = inputs_embeds.shape[:2]
             seq_length = seq_length + embed_length
+            print('input_ids is not none and inputs_embeds is not none', inputs_embeds.shape)
         elif input_ids is not None:
+            inputs_embeds = self.embed_tokens(input_ids)
             batch_size, seq_length = input_ids.shape[:2]
+            print('input_ids is not none', inputs_embeds.shape)
         elif inputs_embeds is not None:
             batch_size, seq_length = inputs_embeds.shape[:2]
+            print('inputs_embeds is not none', inputs_embeds.shape)
         else:
             raise ValueError("You have to specify input_ids and (or) inputs_embeds")
-
+        
         # batch_size, seq_length = inputs_embeds.shape[:2]
 
         if self.gradient_checkpointing and self.training and use_cache:
@@ -53,13 +58,6 @@ class EmbedPreceedLlamaModel(LlamaModel):
         # TODO (joao): remove this exception in v4.56 -- it exists for users that try to pass a legacy cache
         if not isinstance(past_key_values, (type(None), Cache)):
             raise ValueError("The `past_key_values` should be either a `Cache` object or `None`.")
-
-        if inputs_embeds is None:
-            inputs_embeds = self.embed_tokens(input_ids)
-            print('input embed is none', inputs_embeds.shape)
-        else:
-            inputs_embeds = torch.concat([inputs_embeds, self.embed_tokens(input_ids)], dim=1)
-            print('input embed is not none', inputs_embeds.shape)
 
         if use_cache and past_key_values is None:
             past_key_values = DynamicCache()
@@ -175,6 +173,7 @@ class VideoLlamaForCausalLM(LlamaPreTrainedModel, GenerationMixin):
             matching_result = event_embeds @ inputs_embeds.transpose(1,2)
             matching_grd = torch.eye(self.double_perceiver.num_latents).argmax(dim=-1).unsqueeze(0).repeat(inputs_embeds.shape[0],1).to(matching_result.device)
             matching_loss = criteria(matching_result, matching_grd)
+        print(inputs_embeds.shape)
         causal_lm_output = self.llm(
             input_ids=input_ids,
             attention_mask=attention_mask,
