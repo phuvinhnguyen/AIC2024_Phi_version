@@ -41,6 +41,7 @@ class EmbedPreceedLlamaModel(LlamaModel):
             inputs_embeds = self.embed_tokens(input_ids)
             batch_size, seq_length = input_ids.shape[:2]
             print('input_ids is not none', inputs_embeds.shape)
+            print(input_ids)
         elif inputs_embeds is not None:
             batch_size, seq_length = inputs_embeds.shape[:2]
             print('inputs_embeds is not none', inputs_embeds.shape)
