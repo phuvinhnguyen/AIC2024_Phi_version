@@ -85,7 +85,6 @@ class EmbedPreceedLlamaModel(LlamaModel):
 
         # create position embeddings to be shared across the decoder layers
         position_embeddings = self.rotary_emb(hidden_states, position_ids)
-        print(position_embeddings[0].shape, position_embeddings[1].shape, position_ids.shape, hidden_states.shape)
 
         # decoder layers
         all_hidden_states = () if output_hidden_states else None
@@ -169,12 +168,12 @@ class VideoLlamaForCausalLM(LlamaPreTrainedModel, GenerationMixin):
         else:
             inputs_embeds = None
         matching_loss = None
-        if event_embeds is not None:
-            event_embeds = self.double_perceiver(event_embeds, condition_inputs_embeds=condition_inputs_embeds, attention_mask=events_embeds_mask).last_hidden_state
-            criteria = CrossEntropyLoss()
-            matching_result = event_embeds @ inputs_embeds.transpose(1,2)
-            matching_grd = torch.eye(self.double_perceiver.num_latents).argmax(dim=-1).unsqueeze(0).repeat(inputs_embeds.shape[0],1).to(matching_result.device)
-            matching_loss = criteria(matching_result, matching_grd)
+        # if event_embeds is not None:
+        #     event_embeds = self.double_perceiver(event_embeds, condition_inputs_embeds=condition_inputs_embeds, attention_mask=events_embeds_mask).last_hidden_state
+        #     criteria = CrossEntropyLoss()
+        #     matching_result = event_embeds @ inputs_embeds.transpose(1,2)
+        #     matching_grd = torch.eye(self.double_perceiver.num_latents).argmax(dim=-1).unsqueeze(0).repeat(inputs_embeds.shape[0],1).to(matching_result.device)
+        #     matching_loss = criteria(matching_result, matching_grd)
 
         causal_lm_output = self.llm(
             input_ids=input_ids,
